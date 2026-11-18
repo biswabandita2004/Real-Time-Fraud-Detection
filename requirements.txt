@@ -1,0 +1,14 @@
+lightgbm
+pandas
+pyarrow
+numpy
+scikit-learn
+networkx
+matplotlib
+fastapi
+uvicorn
+httpx
+streamlit
+pytest
+fakeredis
+prometheus-client

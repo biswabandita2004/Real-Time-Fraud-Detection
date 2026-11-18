@@ -1,0 +1,32 @@
+{
+  "n_train": 72585,
+  "n_val": 24195,
+  "n_test": 24195,
+  "test_fraud_rate": 0.006075635461872288,
+  "roc_auc": 0.9999289968815204,
+  "pr_auc": 0.993729072231342,
+  "baseline_pr_auc(random)": 0.006075635461872288,
+  "threshold_review": 0.02,
+  "threshold_block": 0.9,
+  "precision@review": 0.7807486631016043,
+  "recall@review": 0.9931972789115646,
+  "flag_rate": 0.007728869601157264,
+  "cost_with_model": 1204.13,
+  "cost_no_model": 48973.90000000001,
+  "feature_importance(gain)": {
+    "new_device": 450726.70315966534,
+    "device_n_accounts": 263455.32457918,
+    "amount": 33385.61936026165,
+    "acct_txn_count": 5637.431632834021,
+    "cat": 4451.175593734486,
+    "country_mismatch": 3947.426733698696,
+    "hour": 1877.5781981391447,
+    "channel": 1213.480496427288,
+    "log_amount": 1015.5668697609835,
+    "secs_since_last": 389.291407498491,
+    "txn_24h": 57.284604547865456,
+    "amt_zscore": 39.79293722541479,
+    "txn_1h": 2.4760963320732117,
+    "is_night": 1.5203180015087128
+  }
+}

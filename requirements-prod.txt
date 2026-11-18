@@ -1,0 +1,14 @@
+# After your tests pass, run `pip freeze > requirements-prod.lock` and build from the lock file for reproducible images.
+lightgbm
+numpy
+pandas
+pyarrow
+redis
+fastapi
+uvicorn[standard]
+pydantic>=2
+prometheus-client
+confluent-kafka
+networkx
+matplotlib
+streamlit

@@ -1,0 +1,35 @@
+# docker compose -f docker-compose.prod.yml --env-file .env up --build
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]        # persistence: feature state survives restarts
+    volumes: ["redis-data:/data"]
+    healthcheck: { test: ["CMD", "redis-cli", "ping"], interval: 5s, retries: 10 }
+  redpanda:                                                  # Kafka-compatible broker, single node (dev/demo only)
+    image: redpandadata/redpanda:v24.2.7
+    command: [redpanda, start, --smp, "1", --memory, 1G, --overprovisioned, --node-id, "0",
+              "--kafka-addr", "internal://0.0.0.0:29092,external://0.0.0.0:9092",
+              "--advertise-kafka-addr", "internal://redpanda:29092,external://localhost:9092"]
+    ports: ["9092:9092"]
+  api:
+    build: .
+    environment:
+      API_KEYS: ${API_KEYS:?set API_KEYS in .env}
+      REDIS_URL: redis://redis:6379/0
+    volumes: ["./artifacts:/app/artifacts:ro", "data:/data"]
+    ports: ["8100:8100"]
+    depends_on: { redis: { condition: service_healthy } }
+    restart: unless-stopped
+  worker:
+    build: .
+    command: ["python", "kafka_worker.py"]
+    environment: { REDIS_URL: "redis://redis:6379/0", KAFKA_BOOTSTRAP: "redpanda:29092" }
+    volumes: ["./artifacts:/app/artifacts:ro", "data:/data"]
+    depends_on: { redis: { condition: service_healthy }, redpanda: { condition: service_started } }
+    restart: unless-stopped
+  dashboard:
+    build: .
+    command: ["streamlit", "run", "/app/app/dashboard.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+    volumes: ["./artifacts:/app/artifacts:ro", "data:/data"]
+    ports: ["8501:8501"]
+volumes: { redis-data: {}, data: {} }
